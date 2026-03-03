@@ -1,0 +1,17 @@
+{
+  "name": "emerson-plugins",
+  "description": "Claude Code plugins by Emerson1337",
+  "owner": {
+    "name": "Emerson1337"
+  },
+  "plugins": [
+    {
+      "name": "looploop",
+      "description": "XP pair-programming plugin — PRD-driven TDD with iterative implementation",
+      "source": {
+        "source": "github",
+        "repo": "Emerson1337/looploop"
+      }
+    }
+  ]
+}
