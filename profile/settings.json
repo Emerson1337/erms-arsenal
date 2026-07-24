@@ -1,0 +1,152 @@
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git show *)",
+      "Bash(git fetch *)",
+      "Bash(git pull *)",
+      "Bash(git branch *)",
+      "Bash(git rev-parse *)",
+      "Bash(git ls-files *)",
+      "Bash(git ls-remote *)",
+      "Bash(git remote -v*)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git stash *)",
+      "Bash(git merge *)",
+      "Bash(git checkout *)",
+      "Bash(git switch *)",
+      "Bash(git tag *)",
+      "Bash(ls *)",
+      "Bash(find *)",
+      "Bash(grep *)",
+      "Bash(cat *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(file *)",
+      "Bash(which *)",
+      "Bash(wc *)",
+      "Bash(stat *)",
+      "Bash(du *)",
+      "Bash(df *)",
+      "Bash(mkdir *)",
+      "Bash(cp *)",
+      "Bash(mv *)",
+      "Bash(touch *)",
+      "Bash(ps *)",
+      "Bash(lsof *)",
+      "Bash(env *)",
+      "Bash(printenv *)",
+      "Bash(pwd)",
+      "Bash(echo *)",
+      "Bash(whoami)",
+      "Bash(uname *)",
+      "Bash(id *)",
+      "Bash(date *)",
+      "Bash(sed *)",
+      "Bash(awk *)",
+      "Bash(sort *)",
+      "Bash(uniq *)",
+      "Bash(diff *)",
+      "Bash(jq *)",
+      "Bash(tee *)",
+      "Bash(xargs *)",
+      "Bash(cargo *)",
+      "Bash(rustc *)",
+      "Bash(npm *)",
+      "Bash(npx *)",
+      "Bash(yarn *)",
+      "Bash(pnpm *)",
+      "Bash(bun *)",
+      "Bash(node *)",
+      "Bash(ruby *)",
+      "Bash(bundle *)",
+      "Bash(rails *)",
+      "Bash(rake *)",
+      "Bash(gem *)",
+      "Bash(go *)",
+      "Bash(python *)",
+      "Bash(pip *)",
+      "Bash(mix *)",
+      "Bash(elixir *)",
+      "Bash(iex *)",
+      "Bash(erl *)",
+      "Bash(zig *)",
+      "Bash(mise *)",
+      "Bash(make *)",
+      "Bash(cmake *)",
+      "Bash(docker compose *)",
+      "Bash(docker ps *)",
+      "Bash(docker logs *)",
+      "Bash(docker images *)",
+      "Bash(gh *)",
+      "Bash(curl *)",
+      "Bash(* --version)",
+      "Bash(* --help)",
+      "WebSearch",
+      "WebFetch"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(rm -r *)",
+      "Bash(sudo *)",
+      "Bash(chmod 777 *)",
+      "Bash(git reset --hard *)",
+      "Bash(git clean *)",
+      "Bash(git push --force *)",
+      "Bash(git push -f *)",
+      "Bash(docker rm *)",
+      "Bash(docker rmi *)",
+      "Bash(docker system prune *)"
+    ],
+    "ask": [
+      "Bash(git push *)",
+      "Bash(git rebase *)",
+      "Bash(git branch -D *)",
+      "Bash(git branch -d *)",
+      "Bash(rm *)",
+      "Bash(kamal *)",
+      "Bash(docker run *)",
+      "Bash(docker exec *)",
+      "Bash(docker stop *)"
+    ],
+    "defaultMode": "auto"
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "sh __CONFIG_DIR__/statusline-command.sh"
+  },
+  "enabledPlugins": {
+    "ralph-loop@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true,
+    "warp@claude-code-warp": true
+  },
+  "extraKnownMarketplaces": {
+    "claude-code-plugins": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/claude-code"
+      }
+    },
+    "claude-code-warp": {
+      "source": {
+        "source": "github",
+        "repo": "warpdotdev/claude-code-warp"
+      }
+    }
+  },
+  "tui": "fullscreen",
+  "voice": {
+    "enabled": true,
+    "mode": "hold"
+  },
+  "skipDangerousModePermissionPrompt": true,
+  "skipAutoPermissionPrompt": true,
+  "agentPushNotifEnabled": true,
+  "voiceEnabled": true
+}

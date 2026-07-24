@@ -1,17 +1,8 @@
 {
   "name": "erms-arsenal",
-  "description": "Claude Code plugins by Emerson1337",
+  "description": "Claude Code presets — skills, global config, and working conventions",
   "owner": {
     "name": "Emerson1337"
   },
-  "plugins": [
-    {
-      "name": "looploop",
-      "description": "XP pair-programming plugin — PRD-driven TDD with iterative implementation",
-      "source": {
-        "source": "github",
-        "repo": "Emerson1337/looploop"
-      }
-    }
-  ]
+  "plugins": []
 }

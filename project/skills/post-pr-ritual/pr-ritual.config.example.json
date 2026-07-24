@@ -1,0 +1,17 @@
+{
+  "$comment": "Copy to <repo>/.claude/pr-ritual.config.json. Every free-text field is empty on purpose — the skill's first-run interview fills it in. An empty field means 'not configured': ask, never assume, and never carry a value over from another repo. Fields whose value reads like 'a|b|c' are enums — pick one.",
+
+  "assignee": "",
+  "reviewStatus": "",
+
+  "tracker": {
+    "type": "clickup|jira|linear|github|none",
+    "prefix": "",
+    "commitPattern": "",
+    "urlTemplate": "",
+    "space": "",
+    "list": ""
+  },
+
+  "commentTemplate": "PR open for review: {url}"
+}

@@ -1,0 +1,73 @@
+{
+  "$comment": "Copy to <repo>/.claude/release.config.json. Every free-text field is empty on purpose — /release fills it in during first-run setup, or you fill it by hand. An empty string means 'not configured': the skill infers it, asks, or skips that step. Fields whose value reads like 'a|b|c' are enums — pick one.",
+
+  "tagPrefix": "v",
+  "lockstep": false,
+  "runbook": "",
+
+  "trunk": {
+    "branch": "",
+    "mergeMethod": "squash"
+  },
+
+  "tiers": [
+    {
+      "name": "",
+      "branch": "",
+      "source": "",
+      "versioning": "prerelease|promote|final",
+      "prereleaseTag": "",
+      "prerelease": false,
+      "env": "",
+      "label": "",
+      "mergeMethod": "merge"
+    }
+  ],
+
+  "repos": [
+    {
+      "slug": "",
+      "path": ".",
+      "required": true,
+      "deploy": {
+        "<tier-name>": {
+          "workflow": "",
+          "trigger": "push|dispatch|none",
+          "verify": []
+        }
+      },
+      "migrations": {
+        "glob": "",
+        "schemas": [],
+        "appliedLogPattern": ""
+      },
+      "artifact": {
+        "kind": "container|lambda|package|static|none",
+        "name": "",
+        "digestLogPattern": ""
+      }
+    }
+  ],
+
+  "tracker": {
+    "type": "clickup|jira|linear|github|none",
+    "prefix": "",
+    "commitPattern": "",
+    "urlTemplate": "",
+    "space": "",
+    "list": ""
+  },
+
+  "chat": {
+    "type": "slack|discord|none",
+    "channel": "",
+    "channelId": "",
+    "post": false
+  },
+
+  "releaseNotes": {
+    "public": true,
+    "file": "",
+    "maxChars": 0
+  }
+}

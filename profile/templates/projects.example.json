@@ -1,0 +1,30 @@
+{
+  "$comment": "Installed to $CLAUDE_CONFIG_DIR/arsenal/projects.json (default ~/.claude/arsenal/projects.json). LOCAL ONLY — never commit this file to any repository; it holds chat destinations and tracker identifiers. /arsenal-setup fills in the first project via the registry interview. Fields whose value reads like 'a|b|c' are enums — pick one. An empty string means 'not configured': the skills ask rather than assume.",
+
+  "defaultProject": "",
+
+  "projects": {
+    "<project-key>": {
+      "repos": [
+        { "name": "", "path": "" }
+      ],
+      "github": {
+        "org": "",
+        "assignee": ""
+      },
+      "tracker": {
+        "type": "clickup|jira|linear|github|none",
+        "prefix": "",
+        "commitPattern": "",
+        "urlTemplate": "",
+        "space": ""
+      },
+      "chat": {
+        "type": "slack|discord|none",
+        "channel": "",
+        "channelId": "",
+        "post": false
+      }
+    }
+  }
+}

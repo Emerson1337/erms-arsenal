@@ -1,0 +1,15 @@
+.DS_Store
+
+# Local Claude Code state — the arsenal's own setup skill is committed,
+# but anything machine-local is not.
+.claude/settings.local.json
+.claude/memory/
+.claude/teams/
+.claude/tasks/
+.claude/worktrees/
+
+# Filled config must never land here — it belongs in ~/.claude/arsenal
+# or in the target repository.
+projects.json
+release.config.json
+pr-ritual.config.json
