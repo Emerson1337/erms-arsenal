@@ -5,7 +5,7 @@ description: JavaScript performance optimization guidelines. Use when writing, r
 
 # JavaScript Best Practices
 
-Performance optimization and code style patterns for JavaScript and TypeScript code. Contains 17 rules focused on reducing unnecessary computation, optimizing data structures, and maintaining consistent conventions.
+Performance optimization and code style patterns for JavaScript and TypeScript code. Contains 16 rules focused on reducing unnecessary computation, optimizing data structures, and maintaining consistent conventions.
 
 ## When to Apply
 
@@ -17,6 +17,9 @@ Reference these guidelines when:
 - Caching values or function results
 - Optimizing hot code paths
 - Declaring variables or functions
+
+Type safety, comments, ternaries, lint suppression, and code structure are not here — they're in
+the `clean-code-standards` skill, which applies to all TypeScript and JavaScript.
 
 ## Rules Summary
 
@@ -76,39 +79,6 @@ export function formatCurrency(amount: number) { ... }
 
 // Exception: Remix routes use default export named "Component"
 export default function Component() { ... }
-```
-
-### no-as-type-casts (HIGH) — @rules/no-as-type-casts.md
-
-Avoid `as Type` casts. Use type guards or Zod validation instead.
-
-```typescript
-// Bad: type assertion
-let user = response.data as User;
-
-// Good: Zod validation
-let user = UserSchema.parse(response.data);
-
-// Good: type guard
-if (isUser(response.data)) {
-  let user = response.data;
-}
-```
-
-### comments-meaningful-only (MEDIUM) — @rules/comments-meaningful-only.md
-
-Only comment when adding info the code cannot express.
-
-```typescript
-// Bad: restates the code
-// Set the user's name
-let userName = user.name;
-
-// Good: explains business rule
-// Transactions under $250 don't require written acknowledgment per policy
-if (transaction.amount < 250) {
-  return { requiresAcknowledgment: false };
-}
 ```
 
 ### set-map-lookups (LOW-MEDIUM) — @rules/set-map-lookups.md

@@ -116,12 +116,12 @@ report "GitHub references to other owners/repos [authored files]" "$hits"
 # ===== TIER 1: config templates must ship empty ===========================
 
 while IFS= read -r f; do
-  # Any string value that isn't empty, a <placeholder>, an a|b|c enum, the
-  # $comment key, or a documented structural default.
+  # Any string value that isn't empty, a <placeholder>, an a|b|c enum (values
+  # may be kebab-case), the $comment key, or a documented structural default.
   hits="$(grep -nE '"[a-zA-Z_$]+"[[:space:]]*:[[:space:]]*"[^"]+"' "$f" \
     | grep -vE '"\$comment"' \
     | grep -vE ':[[:space:]]*"<[^"]*>"' \
-    | grep -vE ':[[:space:]]*"[a-z]+(\|[a-z]+)+"' \
+    | grep -vE ':[[:space:]]*"[a-z]+(-[a-z]+)*(\|[a-z]+(-[a-z]+)*)+"' \
     | grep -vE '"(tagPrefix|mergeMethod|path|commentTemplate)"' \
     | sed "s|^|$f:|")"
   report "Non-empty value in template $f" "$hits"

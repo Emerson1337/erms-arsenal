@@ -14,24 +14,32 @@ Expose `/api/locales/:lng/:ns` to load translation resources with caching.
 // app/routes/api.locales.$lng.$ns.ts
 import { data } from "react-router";
 import { cacheHeader } from "pretty-cache-header";
-import { z } from "zod";
 import resources from "~/locales";
 import type { Route } from "./+types/api.locales.$lng.$ns";
 
+type Language = keyof typeof resources;
+
+function isLanguage(value: string | undefined): value is Language {
+  return value !== undefined && value in resources;
+}
+
+function isNamespaceOf<TNamespaces extends object>(
+  namespaces: TNamespaces,
+  value: string | undefined,
+): value is Extract<keyof TNamespaces, string> {
+  return value !== undefined && value in namespaces;
+}
+
 export async function loader({ params }: Route.LoaderArgs) {
-  const lng = z
-    .enum(Object.keys(resources) as Array<keyof typeof resources>)
-    .safeParse(params.lng);
+  if (!isLanguage(params.lng)) {
+    return data({ error: "Unknown language" }, { status: 400 });
+  }
 
-  if (lng.error) return data({ error: lng.error }, { status: 400 });
+  const namespaces = resources[params.lng];
 
-  const namespaces = resources[lng.data];
-
-  const ns = z
-    .enum(Object.keys(namespaces) as Array<keyof typeof namespaces>)
-    .safeParse(params.ns);
-
-  if (ns.error) return data({ error: ns.error }, { status: 400 });
+  if (!isNamespaceOf(namespaces, params.ns)) {
+    return data({ error: "Unknown namespace" }, { status: 400 });
+  }
 
   const headers = new Headers();
   if (process.env.NODE_ENV === "production") {
@@ -46,7 +54,7 @@ export async function loader({ params }: Route.LoaderArgs) {
     );
   }
 
-  return data(namespaces[ns.data], { headers });
+  return data(namespaces[params.ns], { headers });
 }
 ```
 

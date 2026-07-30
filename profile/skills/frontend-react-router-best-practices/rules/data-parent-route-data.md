@@ -41,14 +41,17 @@ Access all matched routes and their data:
 ```tsx
 import { useMatches } from "react-router";
 
+function isLayoutData(data: unknown): data is LayoutLoaderData {
+  return typeof data === "object" && data !== null && "user" in data;
+}
+
 export default function Component() {
   let matches = useMatches();
+  let layoutData = matches.find((m) => m.id === "routes/_layout")?.data;
 
-  // Find a specific match by ID or pathname
-  let layoutMatch = matches.find((m) => m.id === "routes/_layout");
-  let layoutData = layoutMatch?.data as LayoutLoaderData | undefined;
+  if (!isLayoutData(layoutData)) return null;
 
-  return <div>{layoutData?.user.name}</div>;
+  return <div>{layoutData.user.name}</div>;
 }
 ```
 

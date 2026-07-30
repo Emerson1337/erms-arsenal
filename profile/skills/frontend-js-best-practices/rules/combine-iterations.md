@@ -36,13 +36,13 @@ for (let user of users) {
 ```typescript
 type UserGroup = "admins" | "testers" | "inactive";
 
-let { admins, testers, inactive } = users.reduce(
+let { admins, testers, inactive } = users.reduce<Record<UserGroup, User[]>>(
   (acc, user) => {
     if (user.isAdmin) acc.admins.push(user);
     if (user.isTester) acc.testers.push(user);
     if (!user.isActive) acc.inactive.push(user);
     return acc;
   },
-  { admins: [], testers: [], inactive: [] } as Record<UserGroup, User[]>,
+  { admins: [], testers: [], inactive: [] },
 );
 ```

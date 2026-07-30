@@ -28,6 +28,9 @@ let items = data as Item[];
 // Bad: asserting element type
 let button = document.querySelector(".btn") as HTMLButtonElement;
 
+// Bad: asserting form data
+let file = formData.get("file") as File;
+
 // Bad: forcing type compatibility
 let config = rawConfig as Config;
 ```
@@ -64,7 +67,7 @@ const UserSchema = z.object({
 let user = UserSchema.parse(response.data);
 ```
 
-#### Use Proper DOM Methods
+#### Use instanceof for Runtime Classes
 
 ```typescript
 // Bad
@@ -74,6 +77,17 @@ let button = document.querySelector(".btn") as HTMLButtonElement;
 let element = document.querySelector(".btn");
 if (element instanceof HTMLButtonElement) {
   element.disabled = true;
+}
+```
+
+The same applies to anything the platform hands back as a union — `FormData.get()` returns
+`FormDataEntryValue | null`, so check it rather than assert it:
+
+```typescript
+// Good: the check the cast was skipping
+let file = formData.get("file");
+if (!(file instanceof File)) {
+  return new Response("No file provided", { status: 400 });
 }
 ```
 
@@ -96,6 +110,24 @@ let rawData = getData("user");
 let user = UserSchema.parse(rawData);
 ```
 
+#### Annotate the Target Instead of Casting the Value
+
+A cast used to fix an inferred type is usually an annotation in the wrong place.
+
+```typescript
+// Bad: casting the initial value
+let groups = users.reduce(
+  (accumulator, user) => { ... },
+  { admins: [], testers: [] } as Record<UserGroup, User[]>,
+);
+
+// Good: tell reduce what it's building
+let groups = users.reduce<Record<UserGroup, User[]>>(
+  (accumulator, user) => { ... },
+  { admins: [], testers: [] },
+);
+```
+
 #### Fix the Types
 
 ```typescript
@@ -106,6 +138,33 @@ let result = processData(input) as ExpectedOutput;
 function processData(input: Input): ExpectedOutput {
   // ...
 }
+```
+
+### Not Assertions — These Are Fine
+
+#### `as const`
+
+A literal-narrowing annotation, not a claim about an unchecked value. It makes types *more* precise
+and is the prescribed alternative to `enum` (see the `frontend-react-native-expo-best-practices`
+skill).
+
+```typescript
+// Good
+const ORDER_STATUSES = ["draft", "open", "closed"] as const;
+type OrderStatus = (typeof ORDER_STATUSES)[number];
+```
+
+#### `satisfies`
+
+When the goal was shape-checking rather than shape-claiming, `satisfies` is the right operator: it
+verifies the value against the type and keeps the narrow inferred type.
+
+```typescript
+// Bad: widens, and hides a missing key
+const ROUTES = { home: "/", settings: "/settings" } as Record<RouteName, string>;
+
+// Good: checks every key exists, keeps the literal types
+const ROUTES = { home: "/", settings: "/settings" } satisfies Record<RouteName, string>;
 ```
 
 ### Acceptable Uses
@@ -129,9 +188,12 @@ let mockUser = { id: "1", name: "Test" } as User;
 
 ### Summary
 
-| Instead of                     | Use                         |
-| ------------------------------ | --------------------------- |
-| `data as User`                 | Zod schema validation       |
-| `element as HTMLButtonElement` | `instanceof` check          |
-| `value as string`              | Type guard or proper typing |
-| `response as T`                | Generic with validation     |
+| Instead of                     | Use                                  |
+| ------------------------------ | ------------------------------------ |
+| `data as User`                 | Zod schema validation                |
+| `element as HTMLButtonElement` | `instanceof` check                   |
+| `formData.get("f") as File`    | `instanceof` check                   |
+| `value as SomeType`            | Type guard (`value is SomeType`)     |
+| `response as T`                | Generic with validation              |
+| `initialValue as Shape`        | Annotate the generic: `reduce<Shape>` |
+| `object as Record<K, V>`       | `satisfies Record<K, V>`             |

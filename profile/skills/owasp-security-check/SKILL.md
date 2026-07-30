@@ -205,9 +205,9 @@ await writeFile(`./uploads/${file.name}`, file);
 // Good: Validate type and extension
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const ALLOWED_EXTS = [".jpg", ".jpeg", ".png", ".webp"];
-let file = await req.formData().then((fd) => fd.get("file") as File);
+let file = await req.formData().then((fd) => fd.get("file"));
 
-if (!ALLOWED_TYPES.includes(file.type)) {
+if (!(file instanceof File) || !ALLOWED_TYPES.includes(file.type)) {
   return new Response("Invalid file type", { status: 400 });
 }
 ```

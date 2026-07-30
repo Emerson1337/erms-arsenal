@@ -63,11 +63,11 @@ function UserComment({ comment }: { comment: string }) {
 // Good: Avoid shell commands, validate strictly
 async function convertImage(req: Request): Promise<Response> {
   let formData = await req.formData();
-  let file = formData.get("file") as File;
+  let file = formData.get("file");
 
   let ALLOWED = ["image/jpeg", "image/png", "image/webp"];
 
-  if (!ALLOWED.includes(file.type)) {
+  if (!(file instanceof File) || !ALLOWED.includes(file.type)) {
     return new Response("Invalid type", { status: 400 });
   }
 

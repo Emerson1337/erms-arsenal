@@ -57,9 +57,9 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 async function uploadFile(req: Request): Promise<Response> {
   let formData = await req.formData();
-  let file = formData.get("file") as File;
+  let file = formData.get("file");
 
-  if (!file) {
+  if (!(file instanceof File)) {
     return new Response("No file provided", { status: 400 });
   }
 

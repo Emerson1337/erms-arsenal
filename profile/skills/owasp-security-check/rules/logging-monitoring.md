@@ -83,17 +83,22 @@ async function login(req: Request): Promise<Response> {
 function createLogger() {
   let sensitiveKeys = ["password", "token", "secret", "apiKey"];
 
-  function sanitize(obj: any): any {
-    if (typeof obj !== "object" || obj === null) return obj;
-    let sanitized: any = {};
-    for (const [key, value] of Object.entries(obj)) {
-      sanitized[key] = sensitiveKeys.some((sk) =>
-        key.toLowerCase().includes(sk),
-      )
-        ? "[REDACTED]"
-        : typeof value === "object"
-          ? sanitize(value)
-          : value;
+  function isRedacted(key: string) {
+    return sensitiveKeys.some((sensitiveKey) =>
+      key.toLowerCase().includes(sensitiveKey),
+    );
+  }
+
+  function sanitize(value: unknown): unknown {
+    if (typeof value !== "object" || value === null) return value;
+
+    let sanitized: Record<string, unknown> = {};
+    for (const [key, entry] of Object.entries(value)) {
+      if (isRedacted(key)) {
+        sanitized[key] = "[REDACTED]";
+        continue;
+      }
+      sanitized[key] = sanitize(entry);
     }
     return sanitized;
   }

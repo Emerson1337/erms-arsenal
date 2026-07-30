@@ -104,9 +104,11 @@ async function getUserProfile(req: Request): Promise<Response> {
 }
 
 // Good: Sanitize logs
-function sanitizeForLogging(obj: any): any {
+function sanitizeForLogging(
+  record: Record<string, unknown>,
+): Record<string, unknown> {
   let sensitive = ["password", "token", "secret", "apiKey", "creditCard"];
-  let sanitized = { ...obj };
+  let sanitized = { ...record };
 
   for (const key of Object.keys(sanitized)) {
     if (sensitive.some((s) => key.toLowerCase().includes(s))) {
