@@ -57,7 +57,7 @@ claude -p "Run the arsenal-sync skill now, following it exactly." \
   --allowedTools "Read" "Write" "Edit" "Glob" "Grep" \
     "Bash(diff *)" "Bash(ls *)" "Bash(find *)" "Bash(cat *)" "Bash(cp *)" "Bash(mkdir *)" \
     "Bash(readlink *)" "Bash(git diff *)" "Bash(git status *)" "Bash(bash scripts/check-generic.sh)" \
-  --disallowedTools "Edit(~/.claude/**)" "Write(~/.claude/**)" "Bash(git push *)" "Bash(git commit *)" "Bash(rm *)" \
+  --disallowedTools "Edit(~/.claude/**)" "Bash(git push *)" "Bash(git commit *)" "Bash(rm *)" \
   || fail "the Claude session failed; see the log"
 
 git add -A
