@@ -19,6 +19,9 @@ Run from the root of the arsenal clone. If `profile/` and `project/` aren't pres
 | `profile/CLAUDE.md` | `$HOME/.claude/CLAUDE.md` (merged) | global working preferences |
 | `profile/settings.json` | `$HOME/.claude/settings.json` (merged) | permissions, statusline, env |
 | `profile/statusline-command.sh` | `$HOME/.claude/statusline-command.sh` | referenced by settings |
+| `profile/hooks/*` | `$HOME/.claude/hooks/` | referenced by the `hooks` block in settings |
+| `profile/rules/*.md` | `$HOME/.claude/rules/` | always-loaded global rules |
+| `scripts/install-weekly-sync.sh` | a weekly scheduled job | keeps this arsenal in sync with the machine |
 | `profile/templates/projects.example.json` | `$HOME/.claude/arsenal/projects.json` | local registry — never committed anywhere |
 | `project/skills/*` | `<target-repo>/.claude/skills/` | act on one repo; config is committed beside them |
 
@@ -58,9 +61,10 @@ For each skill in `profile/skills/`, classify it as **new**, **identical** (`dif
 One `AskUserQuestion` round, options driven by what step 1 found:
 
 1. **Profile skills** — all / only new ones / pick from a list / skip.
-2. **Global config** — merge `CLAUDE.md` + `settings.json` + statusline / skip.
+2. **Global config** — merge `CLAUDE.md` + `settings.json` + statusline + hooks + rules / skip.
 3. **Project skills** — into which repository? Offer to skip. Ask for an absolute path and verify it's a git repo.
 4. **Registry** — set up a first project now, or later.
+5. **Weekly sync** — schedule the job that brings this machine's changes back into the arsenal as a pull request (Sundays at 10:00 by default) / skip. Only offer it when this clone has a push-capable `origin` and `gh auth status` passes.
 
 For any skill that **differs**, ask per skill: keep mine, take the arsenal's (backed up), or show the diff first. Never overwrite a differing file without a decision.
 
@@ -76,7 +80,11 @@ Details in `rules/project-install.md`. Copy `project/skills/*` into `<repo>/.cla
 
 Details in `rules/registry-interview.md`. Create `$CONFIG_DIR/arsenal/projects.json` with at least one project so `daily-checkout` works on its first invocation.
 
-## 6. Summary
+## 6. Weekly sync
+
+If chosen in step 2, run `bash scripts/install-weekly-sync.sh` from the clone (pass `SYNC_WEEKDAY` / `SYNC_HOUR` for another slot). It writes a LaunchAgent on macOS or a crontab entry on Linux, pointing at this clone, so the clone must stay where it is. The clone must live outside the config dir: the sync session is barred from writing anywhere under it. Report the schedule and the log path in the summary. Under `--check`, only say it would schedule it.
+
+## 7. Summary
 
 Report, in this order:
 
