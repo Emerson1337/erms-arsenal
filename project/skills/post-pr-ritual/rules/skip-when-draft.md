@@ -1,10 +1,10 @@
 ---
-title: Draft PRs get step 1 only
+title: Draft PRs get steps 0 and 1 only
 impact: MEDIUM
 tags: [workflow, github, draft]
 ---
 
-# Draft PRs get step 1 only
+# Draft PRs get steps 0 and 1 only
 
 A draft PR isn't a handoff signal. Don't move the ticket to review or comment "PR open for review" while it's still draft — that pulls teammates onto code that isn't ready.
 
@@ -24,7 +24,7 @@ Check this **before** running steps 2 and 3, not after.
 
 ## What to do instead
 
-1. Still assign on GitHub (step 1) — that's ownership, not a review request.
+1. Still add the highlighted screenshots (step 0) and assign on GitHub (step 1). Neither is a review request.
 2. **Skip** the ticket comment and the status move.
 3. Say so: `PR #<n> opened as draft — skipping the ticket comment and review move until it's marked ready.`
 

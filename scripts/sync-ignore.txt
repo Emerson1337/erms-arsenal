@@ -1,0 +1,17 @@
+# Paths under the Claude config dir that the weekly sync never brings into the
+# arsenal. One glob per line, relative to the config dir. Lines starting with #
+# are comments.
+
+# Account- and plugin-synced skills: they already have a home elsewhere.
+skills/synced
+skills/*/snapshots
+
+# Rules a product installs into the config dir on its own machines.
+rules/studio-config.md
+
+# Machine state.
+arsenal
+projects
+plans
+sessions
+history.jsonl

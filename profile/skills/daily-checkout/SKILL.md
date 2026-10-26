@@ -98,14 +98,24 @@ gh pr list --search "reviewed-by:@me updated:>=<TODAY>" --state open --limit 30 
   --json number,title,author,url
 ```
 
-Exclude the user's own PRs (already counted as authored work) and anything a prior day's snapshot already reported. Collapse the rest into one `[No ticket] - PR reviews (N PRs across <repos>)` block, one compact line per PR, marking still-open ones "(open)" and prefixing cross-repo ones with the repo name. Add a matching line to the second message so review time gets logged.
+**The `updated:` / `merged:` qualifiers are UTC and the search index lags.** A review submitted in the evening local time carries the next day's UTC date, and a fresh review may not be indexed yet — both make the narrow search come back empty. Widen to `updated:>=<TODAY-2>`, then confirm each candidate against the API, which is authoritative:
+
+```bash
+gh api repos/<org>/<repo>/pulls/<n>/reviews \
+  -q ".[] | select(.user.login==\"$(gh api user -q .login)\") | \"\(.state) \(.submitted_at)\""
+```
+
+A review whose `submitted_at` falls on today **in local time** counts as today's work.
+
+Exclude the user's own PRs (already counted as authored work) and anything a prior day's snapshot already reported. Collapse the rest into one `[No ticket] - PR reviews (N PRs across <repos>)` block, grouped by product area, one compact line per PR as a `<pr-url|#<n>>` link, marking still-open ones "(open)" and prefixing cross-repo ones with the repo name. Add a matching line to the second message so review time gets logged.
 
 ### 5. Filter
 
 - **Include** — anything created today.
 - **Include** — PRs merged today but created earlier, *only if* the prior day's checkout didn't already cover them (dedup against the snapshot, step 8).
 - **Include** — direct commits from step 3 not represented by a PR.
-- **Exclude** — PRs closed without merge. Abandoned work doesn't belong in a checkout.
+- **Exclude** — PRs closed without merge. Abandoned work doesn't belong in a checkout. A closed PR superseded by a redo is still excluded, but mention it in the block of the PR that replaced it.
+- **Include** — planning or research done without a PR (a roadmap, a spike). It gets its own `[No ticket]` block with no link line.
 
 ### 6. Group by ticket
 

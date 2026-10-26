@@ -25,6 +25,7 @@ The setup skill is in this repo's own `.claude/skills/`, so it's available the m
 3. Copy the profile skills and merge the global config into `~/.claude`, backing up anything it touches.
 4. Optionally import the project skills into a repository you name.
 5. Interview you for a first project entry in the local registry.
+6. Offer to schedule the weekly sync, so changes you make on this machine come back here.
 
 Useful variants:
 
@@ -44,6 +45,9 @@ If you'd rather not run the skill:
 ```bash
 cp -R profile/skills/*   ~/.claude/skills/
 cp    profile/statusline-command.sh ~/.claude/
+mkdir -p ~/.claude/hooks ~/.claude/rules
+cp    profile/hooks/* ~/.claude/hooks/
+cp    profile/rules/*.md ~/.claude/rules/   # once the sync has added some
 mkdir -p ~/.claude/arsenal
 cp    profile/templates/projects.example.json ~/.claude/arsenal/projects.json
 
@@ -67,12 +71,12 @@ Invoked from any directory, works on any repository.
 | `address-pr-comments` | Works through a PR's review feedback end-to-end — evaluates each suggestion, applies the ones that hold up, replies and resolves. Two approval gates: nothing is edited, committed, or posted without a go. |
 | `daily-checkout` | End-of-day summary. Discovers the day's PRs, reviews, and direct commits across a project's repos, composes the update plus a tickets-worked-on list, sends both, and snapshots the day for later recall. |
 | `clean-code-standards` | The standards under everything else: never `any`, never `as` assertions, never suppress a linter, never chain ternaries, comments as a last resort, object calisthenics at medium effort. |
-| `test-plan` | One test plan format — numbered scenarios, each with a route `path:`, a chained `action:`, and its own before/after table. Used standalone and for the `## Test plan` section of a PR. |
+| `test-plan` | One test plan format — at most three numbered scenarios, each with a route `path:`, a chained `action:`, and its own before/after table. Used standalone and for the `## Test plan` section of a PR. |
 | `frontend-*-best-practices` (9) | React, React Router, React Native/Expo, Tailwind, i18n, async, JS performance, accessibility, testing. |
 | `owasp-security-check` | Security audit guidelines for web apps and REST APIs, OWASP Top 10 based. |
 | `skill-writing-best-practices` | How to write skills like these. |
 
-Plus `CLAUDE.md` (global working preferences — response style, code standards, test plans, and the git/PR rules), `settings.json` (permission model, statusline, env), and `statusline-command.sh`.
+Plus `CLAUDE.md` (global working preferences — response style, code standards, test plans, and the git/PR rules), `settings.json` (permission model, hooks, statusline, env), `statusline-command.sh`, `hooks/` (the code-standards hook that re-injects the rules on every TypeScript or JavaScript edit), and `rules/` (always-loaded global rules: `voice.md` for how replies are pitched — product language first, brief, honest about what failed — and `auto-commit.md` for committing after every unit of work without pushing).
 
 ### `project/` → `<repo>/.claude/`
 
@@ -82,7 +86,7 @@ Act on one repository; their config is committed beside them so every contributo
 | --- | --- |
 | `release` | Cut a versioned release through the repo's deploy tiers — audit the merge settings, compute the version, open promotion PRs, tag before the deploy, stop for a human to merge, verify the deploy, roll the tag back on red, then write technical **and** public human-readable release notes. |
 | `hotfix` | Transport one urgent fix to **every** environment branch plus trunk — resolved from an open PR, from local work, or from SHAs; cherry-picked per environment; one PR each; tagged per tier; deploys verified as they land; announced. Shares `release.config.json`. |
-| `post-pr-ritual` | The standing handoff after a PR opens: assign it, comment the URL on the ticket, move the ticket to review. Draft PRs get the assign only. |
+| `post-pr-ritual` | The standing handoff after a PR opens: highlighted screenshots of every visible change in the PR body, then assign it, comment the URL on the ticket, move the ticket to review. Draft PRs get the screenshots and the assign only. |
 
 `release` and `post-pr-ritual` interview you on first use and write their config into the repo. `hotfix` has no config of its own — it reads `release.config.json`, so run `/release setup` first.
 
@@ -108,6 +112,24 @@ Call it with an open PR (`/hotfix 412`), with commit SHAs, or with nothing at al
 
 Tags follow each tier's versioning scheme off one shared patch bump, created before the merges for the same reason `/release` does it, and rolled back across every environment if any deploy comes back red. The announcement reports each environment's real state — including the ones still in flight.
 
+## Keeping it in sync
+
+Your setup keeps changing on the machine you work on. A weekly job brings those changes back here so the next machine gets them:
+
+```bash
+bash scripts/install-weekly-sync.sh                 # Sundays at 10:00, local time
+SYNC_WEEKDAY=0 SYNC_HOUR=20 bash scripts/install-weekly-sync.sh
+bash scripts/install-weekly-sync.sh --uninstall
+bash scripts/weekly-sync.sh --dry-run               # run it now, push nothing
+```
+
+Each run starts a headless Claude Code session in this clone that follows the `arsenal-sync` skill: it compares the machine's skills, rules, hooks, `CLAUDE.md` and settings with this repo, ports what changed **in generic form** (personal values move into config templates), and runs `scripts/check-generic.sh`. The script then commits onto one rolling `arsenal-sync` branch and opens or updates a pull request for you to merge. Nothing reaches `main` without you.
+
+- It runs on the machine itself (a LaunchAgent on macOS, a crontab entry on Linux) because that's where the files are. A Mac that's asleep at the time runs it on the next wake.
+- Keep the clone **outside** the config dir: the sync session is not allowed to write anywhere under it.
+- Paths it never brings over are listed in `scripts/sync-ignore.txt`.
+- It needs `git`, `gh` (signed in), and `claude` on the machine. Failures show a desktop notification; the log is `~/.claude/arsenal/logs/weekly-sync.log`.
+
 ## Config lives outside this repo
 
 | File | Scope | Committed? |
@@ -115,6 +137,7 @@ Tags follow each tier's versioning scheme off one shared patch bump, created bef
 | `~/.claude/arsenal/projects.json` | your projects: repos, org, tracker, chat destination | **never** |
 | `~/.claude/arsenal/snapshots/<project>/` | rolling daily-checkout snapshots | **never** |
 | `~/.claude/arsenal/backups/<timestamp>/` | whatever setup replaced | **never** |
+| `~/.claude/arsenal/logs/weekly-sync.log` | weekly sync runs | **never** |
 | `<repo>/.claude/release.config.json` | that repo's tiers, deploy verification, tracker | yes, in that repo |
 | `<repo>/.claude/pr-ritual.config.json` | that repo's assignee, review status, tracker | yes, in that repo |
 | `<repo>/docs/RELEASE.md` | generated human runbook | yes, in that repo |

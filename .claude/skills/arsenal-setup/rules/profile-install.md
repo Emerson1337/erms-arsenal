@@ -18,7 +18,7 @@ BACKUP="$CONFIG_DIR/arsenal/backups/$STAMP"
 mkdir -p "$BACKUP"
 ```
 
-Copy any existing file into it **before** modifying it: `CLAUDE.md`, `settings.json`, `statusline-command.sh`, and each skill directory you're about to replace. Report the path in the summary.
+Copy any existing file into it **before** modifying it: `CLAUDE.md`, `settings.json`, `statusline-command.sh`, each hook and rule file, and each skill directory you're about to replace. Report the path in the summary.
 
 ## Skills
 
@@ -72,6 +72,27 @@ Validate before and after: `python3 -m json.tool < <file> > /dev/null`. If the m
 
 Show the merged result as a diff and get a go before writing.
 
+## Hooks
+
+```bash
+mkdir -p "$CONFIG_DIR/hooks"
+cp profile/hooks/<name> "$CONFIG_DIR/hooks/"
+chmod +x "$CONFIG_DIR/hooks/<name>"
+```
+
+Same new / identical / differs handling as skills. The `hooks` block in `settings.json` points at these files through `__CONFIG_DIR__`, so install the files **before** writing settings — a hook entry pointing at a missing file errors on every matching tool call. The code-standards hook needs `jq`.
+
+Merge the `hooks` block by event: for each event (`PreToolUse`, …) union the matcher entries, dropping an entry whose `matcher` and `command` both already exist. Substitute `__CONFIG_DIR__` exactly as for the statusline.
+
+## Rules
+
+```bash
+mkdir -p "$CONFIG_DIR/rules"
+cp profile/rules/<name>.md "$CONFIG_DIR/rules/"
+```
+
+These load into every session. New → copy; identical → skip; differs → ask, like a skill. Never delete a rule the machine has that the arsenal doesn't.
+
 ## Statusline script
 
 ```bash
@@ -97,5 +118,5 @@ Only when it doesn't already exist. If it does, leave it and hand off to `rules/
 3. `CLAUDE.md` merges by appending missing sections only.
 4. `settings.json` unions permission lists, keeps the user's values on conflict, and never loosens a restriction.
 5. Validate JSON before and after; restore from backup on a parse failure.
-6. Statusline path is literal and absolute — no `~`, no `$HOME`.
+6. Statusline and hook paths are literal and absolute — no `~`, no `$HOME`.
 7. Never overwrite an existing registry.

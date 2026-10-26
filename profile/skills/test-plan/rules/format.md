@@ -78,14 +78,13 @@ Directly under `action:`, per scenario. Headers are exactly `Before` and `After 
 Both columns describe what a person sees or receives. `The handler returns early` is not an
 observation — `The row stays in the list and no request is sent` is.
 
-**One row per assertion.** A scenario checking three things has three rows:
+**One row per pass/fail assertion, two at most** (see @rules/scenario-coverage.md). Fold related
+observations into one row rather than listing each:
 
 ```markdown
 | Before | After (expected) |
 | --- | --- |
-| Spinner never stops | Error reads "File must be under 5 MB" |
-| File appears in the list | List unchanged |
-| 500 in the server log | 400 in the server log |
+| Spinner never stops, file is stored anyway | Error reads "File must be under 5 MB", nothing stored |
 ```
 
 ### Bad: Too Vague to Run
@@ -122,5 +121,5 @@ action: Click "Upload" -> choose a 12 MB PNG -> Click "Confirm"
 | Heading   | Numbered, states what the scenario proves                           |
 | `path:`   | The route as shown in the address bar; `:param` form kept           |
 | `action:` | One line, ` -> ` between steps, real values quoted, no implied steps |
-| Table     | Per scenario, `Before` / `After (expected)`, one row per assertion   |
+| Table     | Per scenario, `Before` / `After (expected)`, at most 2 rows          |
 | Wording   | What a person observes — never what the code does internally         |

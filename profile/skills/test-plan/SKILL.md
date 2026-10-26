@@ -1,6 +1,6 @@
 ---
 name: test-plan
-description: The required test plan format — numbered scenarios, each with a route path, a concrete click-through action chain, and its own before/after behavior table. Use whenever a test plan is requested, including the `## Test plan` section of a pull request description.
+description: The required test plan format — at most 3 numbered scenarios, each with a route path, a concrete click-through action chain, and its own before/after table. Use whenever a test plan is requested, including the `## Test plan` section of a pull request description.
 ---
 
 # Test Plan Format
@@ -8,8 +8,10 @@ description: The required test plan format — numbered scenarios, each with a r
 Every test plan uses one format, whether it's asked for on its own or written into a pull request
 description. 2 rules.
 
-A test plan is a script someone else can follow without asking questions. Each scenario says where
-to start, exactly what to do, and what changed.
+A test plan is a short script someone else can follow without asking questions. Each scenario says
+where to start, exactly what to do, and what changed.
+
+**Hard ceiling: 3 scenarios, 2 table rows each.** Short and run beats thorough and skipped.
 
 ## When to Apply
 
@@ -60,13 +62,14 @@ action: Click "Upload" -> choose a 12 MB PNG -> Click "Confirm"
 | Before | After (expected) |
 | --- | --- |
 | Spinner never stops | Error reads "File must be under 5 MB" |
-| File appears in the list | List unchanged |
 ```
 
 ### scenario-coverage (MEDIUM) — @rules/scenario-coverage.md
 
-Cover the happy path, each changed branch, the regression being prevented, and any re-run or
-migration path. The Before column is observed on the base branch, never guessed.
+At most 3 scenarios: the behavior the ticket asked for, the case that would silently regress, and at
+most one separate surface the diff touched. Never add a scenario to show something is unchanged. One
+row per pass/fail assertion — no cosmetic rows. The Before column is observed on the base branch,
+never guessed.
 
 ```markdown
 | Before | After (expected) |
