@@ -71,12 +71,12 @@ Invoked from any directory, works on any repository.
 | `address-pr-comments` | Works through a PR's review feedback end-to-end — evaluates each suggestion, applies the ones that hold up, replies and resolves. Two approval gates: nothing is edited, committed, or posted without a go. |
 | `daily-checkout` | End-of-day summary. Discovers the day's PRs, reviews, and direct commits across a project's repos, composes the update plus a tickets-worked-on list, sends both, and snapshots the day for later recall. |
 | `clean-code-standards` | The standards under everything else: never `any`, never `as` assertions, never suppress a linter, never chain ternaries, comments as a last resort, object calisthenics at medium effort. |
-| `test-plan` | One test plan format — numbered scenarios, each with a route `path:`, a chained `action:`, and its own before/after table. Used standalone and for the `## Test plan` section of a PR. |
+| `test-plan` | One test plan format — at most three numbered scenarios, each with a route `path:`, a chained `action:`, and its own before/after table. Used standalone and for the `## Test plan` section of a PR. |
 | `frontend-*-best-practices` (9) | React, React Router, React Native/Expo, Tailwind, i18n, async, JS performance, accessibility, testing. |
 | `owasp-security-check` | Security audit guidelines for web apps and REST APIs, OWASP Top 10 based. |
 | `skill-writing-best-practices` | How to write skills like these. |
 
-Plus `CLAUDE.md` (global working preferences — response style, code standards, test plans, and the git/PR rules), `settings.json` (permission model, hooks, statusline, env), `statusline-command.sh`, `hooks/` (the code-standards hook that re-injects the rules on every TypeScript or JavaScript edit), and `rules/` (always-loaded global rules).
+Plus `CLAUDE.md` (global working preferences — response style, code standards, test plans, and the git/PR rules), `settings.json` (permission model, hooks, statusline, env), `statusline-command.sh`, `hooks/` (the code-standards hook that re-injects the rules on every TypeScript or JavaScript edit), and `rules/` (always-loaded global rules: `voice.md` for how replies are pitched — product language first, brief, honest about what failed — and `auto-commit.md` for committing after every unit of work without pushing).
 
 ### `project/` → `<repo>/.claude/`
 
@@ -86,7 +86,7 @@ Act on one repository; their config is committed beside them so every contributo
 | --- | --- |
 | `release` | Cut a versioned release through the repo's deploy tiers — audit the merge settings, compute the version, open promotion PRs, tag before the deploy, stop for a human to merge, verify the deploy, roll the tag back on red, then write technical **and** public human-readable release notes. |
 | `hotfix` | Transport one urgent fix to **every** environment branch plus trunk — resolved from an open PR, from local work, or from SHAs; cherry-picked per environment; one PR each; tagged per tier; deploys verified as they land; announced. Shares `release.config.json`. |
-| `post-pr-ritual` | The standing handoff after a PR opens: assign it, comment the URL on the ticket, move the ticket to review. Draft PRs get the assign only. |
+| `post-pr-ritual` | The standing handoff after a PR opens: highlighted screenshots of every visible change in the PR body, then assign it, comment the URL on the ticket, move the ticket to review. Draft PRs get the screenshots and the assign only. |
 
 `release` and `post-pr-ritual` interview you on first use and write their config into the repo. `hotfix` has no config of its own — it reads `release.config.json`, so run `/release setup` first.
 

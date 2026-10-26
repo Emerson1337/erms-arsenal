@@ -1,11 +1,11 @@
 ---
 name: post-pr-ritual
-description: Run the standing post-PR handoff ritual after a pull request is opened in this repository — assign the PR to its owner on GitHub, comment the PR URL on the linked ticket, and move that ticket to the review status. Use this every time you open (or confirm "PR is open" for) a PR in a repo that has `.claude/pr-ritual.config.json`, or when the user says "PR is open", "follow our standards", "do everything we usually do" around a ticket — no explicit invocation needed. Skip when the PR is a draft, the ticket is on hold, or the user says otherwise.
+description: Run the standing post-PR handoff ritual after a pull request is opened in this repository — add highlighted screenshots of every visible change to the PR body (drafts included), assign the PR to its owner on GitHub, comment the PR URL on the linked ticket, and move that ticket to the review status. Use this every time you open (or confirm "PR is open" for) a PR in a repo that has `.claude/pr-ritual.config.json`, or when the user says "PR is open", "follow our standards", "do everything we usually do" around a ticket — no explicit invocation needed. Skip when the PR is a draft, the ticket is on hold, or the user says otherwise.
 ---
 
 # Post-PR Ritual
 
-After a PR is opened, run this handoff so GitHub and the tracker stay in sync. The steps are independent — run them in parallel.
+After a PR is opened, make sure it shows what changed (step 0), then run the handoff so GitHub and the tracker stay in sync. The handoff steps are independent — run them in parallel.
 
 ## Configuration
 
@@ -52,9 +52,15 @@ Skip when:
 
 - The PR is a draft — see `rules/skip-when-draft.md`.
 - The user says the ticket is on hold, blocked, or shouldn't be reviewed yet.
-- The PR has no linked ticket and `tracker.type` isn't `none` — then only step 1 applies.
+- The PR has no linked ticket and `tracker.type` isn't `none` — then only steps 0 and 1 apply.
 
-## The steps
+## 0. Screenshots with highlights
+
+Any PR with a change a user can see gets a `## Screenshots` section above `## Test plan`. Each image shows the changed area outlined in red, with a short tag naming the change, so a reviewer sees what changed without running the branch. This step applies to draft PRs too.
+
+How to capture, highlight, and host them: `rules/screenshots-with-highlights.md`. When the PR has no visible change, write "No UI change." in the PR body instead.
+
+## The handoff steps
 
 Run all of them, in parallel — they share no state. See `rules/parallel-execution.md`.
 
@@ -84,7 +90,7 @@ Send `reviewStatus` **exactly** as configured. If the call rejects the value, do
 
 One tight line per step, e.g.:
 
-> PR #<n> → assigned `<assignee>`, URL commented on `<ticket>`, ticket moved to `<status>`.
+> PR #<n> → <k> highlighted screenshots added, assigned `<assignee>`, URL commented on `<ticket>`, ticket moved to `<status>`.
 
 Don't restate what the PR did — the user just read that. Confirm the handoff, nothing more.
 
@@ -96,5 +102,6 @@ Without it: teammates can't tell the ticket is ready for review because its stat
 
 - `rules/parallel-execution.md` — why the steps run in one turn.
 - `rules/status-vocabulary.md` — exact status strings, and what to do when one is rejected.
-- `rules/skip-when-draft.md` — draft PRs get step 1 only.
+- `rules/skip-when-draft.md` — draft PRs get steps 0 and 1 only.
 - `rules/integrations.md` — tracker adapters.
+- `rules/screenshots-with-highlights.md` — what to capture, how to highlight, where the images live.

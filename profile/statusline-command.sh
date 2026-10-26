@@ -73,7 +73,7 @@ if [ -n "$used_pct" ]; then
   bar_str=$(printf "${BAR_COLOR}${filled_blocks}${RESET}${GRAY}${empty_blocks}${RESET}")
   ctx_part=$(printf "%s ${WHITE}${BOLD}%s%%${RESET}" "$bar_str" "$pct_int")
 else
-  ctx_part=$(printf "${GRAY}▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ --%${RESET}")
+  ctx_part=$(printf "${GRAY}▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ --%%${RESET}")
 fi
 
 # 5h session usage + reset countdown
