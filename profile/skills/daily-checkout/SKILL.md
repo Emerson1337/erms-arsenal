@@ -24,7 +24,8 @@ Each project entry provides:
 
 | Field | Meaning |
 | --- | --- |
-| `repos[]` | `{ name, path }` — local clone paths, so `gh`/`git` run in the right cwd |
+| `repos[]` | `{ name, path }` — local clone paths, so `gh`/`git` run in the right cwd. May be empty (see below) |
+| `chat.contextChannelId` | optional — a channel to read for context when the project has no repos |
 | `github.org` | for building PR and commit URLs |
 | `tracker` | `{ type, prefix, urlTemplate, space }` — how tickets are identified and linked |
 | `chat` | `{ type, channelId, channel }` — where the messages go |
@@ -37,7 +38,7 @@ Each project entry provides:
 Ask for, in this order, then write the entry to `~/.claude/arsenal/projects.json` and continue on the same turn:
 
 1. **Project name** — the keyword typed after `sleep`.
-2. **Repos** — each repo's name and local clone path. Verify each path exists and is a git repo (`git -C <path> rev-parse --show-toplevel`).
+2. **Repos** — each repo's name and local clone path. Verify each path exists and is a git repo (`git -C <path> rev-parse --show-toplevel`). If the work is built somewhere with no repo (a hosted low-code editor, say), leave `repos[]` empty and ask for an optional context channel to read instead.
 3. **GitHub org/owner** — infer it from a repo's remote (`git -C <path> remote get-url origin`) and confirm rather than asking cold.
 4. **Chat destination** — which channel or DM the update goes to, and its ID. Explain that an ID is more reliable than a name.
 5. **Tracker** — type, ticket prefix, and ticket URL template. Offer what the commit log shows: `git -C <path> log --pretty=%s -200 | grep -oE '^\[?[A-Z][A-Z0-9]+-[0-9]+' | sort | uniq -c | sort -rn | head`. If the project has no tracker, say so — untracked work is reported as `[No ticket]` blocks.
@@ -56,6 +57,8 @@ The user typing `sleep <project>` is the entire input. Do all of this on one tur
 ### 1. Resolve the project
 
 From the registry. One-line preamble naming the project.
+
+If its `repos[]` is empty, skip steps 2–4. Build the blocks from the session's work and, when set, the `chat.contextChannelId` channel. Use `[No ticket]` blocks with no link line unless a tracker is configured.
 
 ### 2. Discover today's authored PRs
 

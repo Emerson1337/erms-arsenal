@@ -76,7 +76,7 @@ Invoked from any directory, works on any repository.
 | `owasp-security-check` | Security audit guidelines for web apps and REST APIs, OWASP Top 10 based. |
 | `skill-writing-best-practices` | How to write skills like these. |
 
-Plus `CLAUDE.md` (global working preferences — response style, code standards, test plans, and the git/PR rules), `settings.json` (permission model, hooks, statusline, env), `statusline-command.sh`, `hooks/` (the code-standards hook that re-injects the rules on every TypeScript or JavaScript edit), and `rules/` (always-loaded global rules: `voice.md` for how replies are pitched — product language first, brief, honest about what failed — and `auto-commit.md` for committing after every unit of work without pushing).
+Plus `CLAUDE.md` (global working preferences — response style, code standards, test plans, and the git/PR rules), `settings.json` (permission model, hooks, statusline, env), `statusline-command.sh`, `hooks/` (the code-standards hook that re-injects the rules on every TypeScript or JavaScript edit), and `rules/` (always-loaded global rules: `voice.md` for how replies are pitched — product language first, brief, honest about what failed —, `auto-commit.md` for committing after every unit of work without pushing, and `plan-summary.md` for opening every plan-mode plan with a short summary a product owner can approve from).
 
 ### `project/` → `<repo>/.claude/`
 
