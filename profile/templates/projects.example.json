@@ -23,6 +23,7 @@
         "type": "slack|discord|none",
         "channel": "",
         "channelId": "",
+        "contextChannelId": "",
         "post": false
       }
     }
